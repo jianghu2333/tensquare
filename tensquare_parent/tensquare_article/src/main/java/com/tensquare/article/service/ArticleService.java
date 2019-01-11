@@ -55,6 +55,26 @@ public class ArticleService {
     }
 
     /**
+     * 点赞
+     * @param id 文章ID
+     * @return
+     */
+    @Transactional
+    public int updateThumbup(String id){
+        return articleDao.updateThumbup(id);
+    }
+
+    /**
+     * 文章审核
+     * @param id
+     */
+    @Transactional
+    public void examine(String id){
+        articleDao.examine(id);
+    }
+
+
+    /**
      * 查询全部列表
      *
      * @return

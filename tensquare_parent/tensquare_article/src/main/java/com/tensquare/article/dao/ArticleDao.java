@@ -20,4 +20,23 @@ public interface ArticleDao extends JpaRepository<Article, String>, JpaSpecifica
     @Modifying
     @Query(value = "UPDATE tb_article set thumbup=thumbup+1 WHERE id=?", nativeQuery = true)
     void addThumbup(String id);
+
+    /**
+     * 点赞
+     *
+     * @param id
+     * @return
+     */
+    @Modifying
+    @Query("update Article a set thumbup=thumbup+1 where id=?1")
+    int updateThumbup(String id);
+
+    /**
+     * 审核
+     * @param id
+     */
+    @Modifying
+    @Query("update Article set state='1' where id=?1")
+    public void examine(String id);
+
 }

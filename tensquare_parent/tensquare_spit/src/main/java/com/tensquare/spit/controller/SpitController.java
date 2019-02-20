@@ -26,6 +26,7 @@ public class SpitController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
     /**
      * 查询全部数据
      *
@@ -33,7 +34,7 @@ public class SpitController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public Result findAll() {
-        return new Result(true, StatusCode.OK, "查询成功",spitService.findAll());
+        return new Result(true, StatusCode.OK, "查询成功", spitService.findAll());
     }
 
     /**
@@ -44,7 +45,7 @@ public class SpitController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Result findOne(@PathVariable String id) {
-        return new Result(true, StatusCode.OK, "查询成功",spitService.findById(id));
+        return new Result(true, StatusCode.OK, "查询成功", spitService.findById(id));
     }
 
     /**
@@ -83,35 +84,37 @@ public class SpitController {
 
     /**
      * 根据上级ID查询吐槽分页数据
+     *
      * @param page
      * @param size
      * @return
      */
-    @RequestMapping(value="/comment/{parentId}/{page}/{size}",method=RequestMethod.GET)
+    @RequestMapping(value = "/comment/{parentId}/{page}/{size}", method = RequestMethod.GET)
     public Result findByParentid(@PathVariable String parentId,
-                                 @PathVariable int page,@PathVariable int size){
-        Page<Spit> pageList = spitService.findByParentid(parentId,page,
+                                 @PathVariable int page, @PathVariable int size) {
+        Page<Spit> pageList = spitService.findByParentid(parentId, page,
                 size);
-        return new Result(true,StatusCode.OK,"查询成功",new
-                PageResult<Spit>(pageList.getTotalElements(), pageList.getContent() ) );
+        return new Result(true, StatusCode.OK, "查询成功", new
+                PageResult<Spit>(pageList.getTotalElements(), pageList.getContent()));
     }
 
     /**
      * 吐槽点赞
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/thumbup/{id}", method = RequestMethod.PUT)
-    public Result updateThumbup(@PathVariable String id){
-//判断用户是否点过赞
-        String userid="2023";// 后边我们会修改为当前登陆的用户
-        if(redisTemplate.opsForValue().get("thumbup_"+userid+"_"+
-                id)!=null){
-            return new Result(false,StatusCode.REPERROR,"你已经点过赞了");
+    public Result updateThumbup(@PathVariable String id) {
+        //判断用户是否点过赞
+        String userid = "2023";// 后边我们会修改为当前登陆的用户
+        if (redisTemplate.opsForValue().get("thumbup_" + userid + "_" +
+                id) != null) {
+            return new Result(false, StatusCode.REPERROR, "你已经点过赞了");
         }
         spitService.updateThumbup(id);
-        redisTemplate.opsForValue().set( "thumbup_"+userid+"_"+ id,"1");
-        return new Result(true,StatusCode.OK,"点赞成功");
+        redisTemplate.opsForValue().set("thumbup_" + userid + "_" + id, "1");
+        return new Result(true, StatusCode.OK, "点赞成功");
     }
 
 }
